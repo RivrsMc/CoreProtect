@@ -17,6 +17,7 @@ public final class Chat {
     public static final String COMPONENT_TAG_CLOSE = "</COMPONENT>";
     public static final String COMPONENT_COMMAND = "COMMAND";
     public static final String COMPONENT_POPUP = "POPUP";
+    public static final String COMPONENT_ITEM = "ITEM";
     public static final String COMPONENT_PIPE = "<PIPE/>";
 
     private Chat() {
@@ -26,6 +27,11 @@ public final class Chat {
     public static void sendComponent(CommandSender sender, String string, String bypass) {
         SpigotAdapter.ADAPTER.sendComponent(sender, string, bypass);
     }
+
+    public static void sendComponent(CommandSender sender, String string, String bypass, Object... args) {
+        SpigotAdapter.ADAPTER.sendComponent(sender, string, bypass, args);
+    }
+
 
     public static void sendComponent(CommandSender sender, String string) {
         sendComponent(sender, string, null);

@@ -1,8 +1,17 @@
 package net.coreprotect.spigot;
 
+import java.awt.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.List;
 import java.util.regex.Matcher;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Villager;
 
@@ -10,6 +19,8 @@ import net.coreprotect.bukkit.BukkitAdapter;
 import net.coreprotect.config.ConfigHandler;
 import net.coreprotect.utility.Chat;
 import net.coreprotect.utility.Util;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class SpigotAdapter implements SpigotInterface {
 
@@ -72,8 +83,7 @@ public class SpigotAdapter implements SpigotInterface {
                 if (data[0].equals(Chat.COMPONENT_COMMAND) || data[0].equals(Chat.COMPONENT_POPUP)) {
                     message.append(data[2]);
                 }
-            }
-            else {
+            } else {
                 message.append(matcher.group(2));
             }
         }
@@ -97,6 +107,47 @@ public class SpigotAdapter implements SpigotInterface {
 
     @Override
     public void setVillagerGossipDecayTime(Villager villager, Object value) {
+    }
+
+    @Override
+    public void sendComponent(CommandSender sender, String string, String bypass, Object... args) {
+        StringBuilder message = new StringBuilder();
+
+        Matcher matcher = Util.tagParser.matcher(string);
+        while (matcher.find()) {
+            String value = matcher.group(1);
+            if (value != null) {
+                String[] data = value.split("\\|", 3);
+                if (data[0].equals(Chat.COMPONENT_COMMAND) || data[0].equals(Chat.COMPONENT_POPUP)) {
+                    message.append(data[2]);
+                } else if (data[0].equals(Chat.COMPONENT_ITEM)) {
+                    message.append("$ITEM_PARAM$");
+                }
+            } else {
+                message.append(matcher.group(2));
+            }
+        }
+
+        if (bypass != null) {
+            message.append(bypass);
+        }
+
+        Component component = LegacyComponentSerializer.legacySection().deserialize(message.toString());
+        component = component.replaceText(builder -> builder.matchLiteral("$ITEM_PARAM$")
+                .replacement(new Function<>() {
+                    private int index = 0;
+
+                    @Override
+                    public ComponentLike apply(TextComponent.Builder builder) {
+                        if (!(args[index] instanceof ItemStack))
+                            return Component.text("INVALID_ITEM_PASSED");
+                        ItemStack item = (ItemStack) args[index++];
+
+                        return item.displayName();
+                    }
+                }));
+
+        sender.sendMessage(component);
     }
 
     public String processComponent(String component) {

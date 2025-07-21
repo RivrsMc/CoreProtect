@@ -168,6 +168,15 @@ public class ChatUtils {
 
         return message.toString();
     }
+    public static String createTooltip(String phrase) {
+        StringBuilder message = new StringBuilder(Chat.COMPONENT_TAG_OPEN + Chat.COMPONENT_ITEM);
+
+        message.append("|nothing|");
+        // chat output
+        message.append(phrase);
+
+        return message.append(Chat.COMPONENT_TAG_CLOSE).toString();
+    }
 
     public static String createTooltip(String phrase, String tooltip) {
         if (tooltip.isEmpty()) {

@@ -13,6 +13,8 @@ public interface SpigotInterface {
 
     public void sendComponent(CommandSender sender, String string, String bypass);
 
+    public void sendComponent(CommandSender sender, String string, String bypass, Object... args);
+
     public boolean setVillagerReputations(Villager villager, List<?> reputations);
 
     public Object getVillagerGossipDecayTime(Villager villager);
