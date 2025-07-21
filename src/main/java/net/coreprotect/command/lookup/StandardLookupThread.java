@@ -57,6 +57,7 @@ import net.coreprotect.utility.MaterialUtils;
 import net.coreprotect.utility.StringUtils;
 import net.coreprotect.utility.WorldUtils;
 import net.coreprotect.utility.ErrorReporter;
+import org.bukkit.inventory.ItemStack;
 
 public class StandardLookupThread implements Runnable {
     private static final int SUMMARY_QUERY_TIMEOUT_SECONDS = 30;
@@ -454,12 +455,14 @@ public class StandardLookupThread implements Runnable {
                                 String timeago = ChatUtils.getTimeSince(Integer.parseInt(time), unixtimestamp, true);
                                 Material blockType = ItemUtils.itemFilter(MaterialUtils.getType(dtype), (Integer.parseInt(data[13]) == 0));
                                 String dname = StringUtils.nameFilter(blockType.name().toLowerCase(Locale.ROOT), ddata);
-                                byte[] metadata = data[11] == null ? null : data[11].getBytes(StandardCharsets.ISO_8859_1);
-                                String tooltip = ItemUtils.getEnchantments(metadata, dtype, amount);
-                                Integer itemId = ItemUtils.makeGivableItem(ItemUtils.getItemStack(metadata, dtype, amount));
+                                 byte[] metadata = data[11] == null ? null : data[11].getBytes(StandardCharsets.ISO_8859_1);
+                                 String tooltip = ItemUtils.getEnchantments(metadata, dtype, amount);
+                                 Integer itemId = ItemUtils.makeGivableItem(ItemUtils.getItemStack(metadata, dtype, amount));
+                                 ItemStack item = new ItemStack(MaterialUtils.getType(dtype), amount);
+                                 item = (ItemStack) net.coreprotect.database.rollback.Rollback.populateItemStack(item, metadata)[2];
 
-                                String selector = Selector.FIRST;
-                                String tag = Color.WHITE + "-";
+                                 String selector = Selector.FIRST;
+                                 String tag = Color.WHITE + "-";
                                 if (daction == ItemTransactionActions.DROP || daction == ItemTransactionActions.PICKUP) {
                                     selector = (daction != ItemTransactionActions.DROP ? Selector.FIRST : Selector.SECOND);
                                     tag = (daction != ItemTransactionActions.DROP ? Color.GREEN + "+" : Color.RED + "-");
@@ -484,10 +487,9 @@ public class StandardLookupThread implements Runnable {
                                     selector = (daction == ItemTransactionActions.REMOVE ? Selector.FIRST : Selector.SECOND);
                                     tag = (daction == ItemTransactionActions.REMOVE ? Color.GREEN + "+" : Color.RED + "-");
                                 }
-
-                                String coordinateInfo = entityLocation == null ? "" : entityLocation.getOriginTooltip();
-                                Chat.sendComponent(player, timeago + " " + tag + " " + Phrase.build(Phrase.LOOKUP_CONTAINER, Color.DARK_AQUA + rbd + dplayer + Color.WHITE + rbd, "x" + amount, ChatUtils.createTooltip(Color.DARK_AQUA + rbd + dname, tooltip) + coordinateInfo + ChatUtils.filterComponent(player.hasPermission("coreprotect.give"), ChatUtils.createGiveItemComponent(Color.GREY + "(↓)", command.getName(), itemId)) + Color.WHITE, selector));
-                                PluginChannelListener.getInstance().sendData(player, Integer.parseInt(time), Phrase.LOOKUP_CONTAINER, selector, dplayer, dname, amount, dataX, dataY, dataZ, wid, rbd, true, tag.contains("+"));
+                                 String coordinateInfo = entityLocation == null ? "" : entityLocation.getOriginTooltip();
+                                 Chat.sendComponent(player, timeago + " " + tag + " " + Phrase.build(Phrase.LOOKUP_CONTAINER, Color.DARK_AQUA + rbd + dplayer + Color.WHITE + rbd, "x" + amount, ChatUtils.createTooltip(Color.DARK_AQUA + rbd + dname, tooltip) + coordinateInfo + ChatUtils.filterComponent(player.hasPermission("coreprotect.give"), ChatUtils.createGiveItemComponent(Color.GREY + "(↓)", command.getName(), itemId)) + Color.WHITE, selector), null, item);
+                                 PluginChannelListener.getInstance().sendData(player, Integer.parseInt(time), Phrase.LOOKUP_CONTAINER, selector, dplayer, dname, amount, dataX, dataY, dataZ, wid, rbd, true, tag.contains("+"));
                             }
                         }
                         else {
@@ -563,9 +565,11 @@ public class StandardLookupThread implements Runnable {
                                 String selector = Selector.FIRST;
                                 String action = "a:block";
                                 if (actions.contains(LookupActions.CONTAINER) || actions.contains(5) || actions.contains(LookupActions.ITEM) || amount > -1) {
-                                    byte[] metadata = data[11] == null ? null : data[11].getBytes(StandardCharsets.ISO_8859_1);
-                                    String tooltip = ItemUtils.getEnchantments(metadata, dtype, amount);
-                                    Integer itemId = ItemUtils.makeGivableItem(ItemUtils.getItemStack(metadata, dtype, amount));
+                                     byte[] metadata = data[11] == null ? null : data[11].getBytes(StandardCharsets.ISO_8859_1);
+                                     String tooltip = ItemUtils.getEnchantments(metadata, dtype, amount);
+                                     Integer itemId = ItemUtils.makeGivableItem(ItemUtils.getItemStack(metadata, dtype, amount));
+                                     ItemStack item = new ItemStack(MaterialUtils.getType(dtype), amount);
+                                     item = (ItemStack) net.coreprotect.database.rollback.Rollback.populateItemStack(item, metadata)[2];
 
                                     if (daction == ItemTransactionActions.DROP || daction == ItemTransactionActions.PICKUP) {
                                         phrase = Phrase.LOOKUP_ITEM; // {picked up|dropped}
@@ -591,9 +595,8 @@ public class StandardLookupThread implements Runnable {
                                         tag = (daction != ItemTransactionActions.REMOVE ? Color.GREEN + "+" : Color.RED + "-");
                                         action = "a:container";
                                     }
-
-                                    Chat.sendComponent(player, timeago + " " + tag + " " + Phrase.build(phrase, Color.DARK_AQUA + rbd + dplayer + Color.WHITE + rbd, "x" + amount, ChatUtils.createTooltip(Color.DARK_AQUA + rbd + dname, tooltip) + ChatUtils.filterComponent(player.hasPermission("coreprotect.give"), ChatUtils.createGiveItemComponent(Color.GREY + "(↓)", command.getName(), itemId)) + Color.WHITE, selector));
-                                    PluginChannelListener.getInstance().sendData(player, Integer.parseInt(time), phrase, selector, dplayer, dname, (tag.contains("+") ? 1 : -1), dataX, dataY, dataZ, wid, rbd, action.contains("container"), tag.contains("+"));
+                                     Chat.sendComponent(player, timeago + " " + tag + " " + Phrase.build(phrase, Color.DARK_AQUA + rbd + dplayer + Color.WHITE + rbd, "x" + amount, ChatUtils.createTooltip(Color.DARK_AQUA + rbd + dname, tooltip) + ChatUtils.filterComponent(player.hasPermission("coreprotect.give"), ChatUtils.createGiveItemComponent(Color.GREY + "(↓)", command.getName(), itemId)) + Color.WHITE, selector), null, item);
+                                     PluginChannelListener.getInstance().sendData(player, Integer.parseInt(time), phrase, selector, dplayer, dname, (tag.contains("+") ? 1 : -1), dataX, dataY, dataZ, wid, rbd, action.contains("container"), tag.contains("+"));
                                 }
                                 else {
                                     if (entityInteraction) {

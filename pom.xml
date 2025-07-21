@@ -4,10 +4,11 @@
   <artifactId>CoreProtect</artifactId>
   <version>24.0</version>
   <properties>
-    <project.branch></project.branch>
+    <project.branch>development</project.branch>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <skipTests>true</skipTests>
-    <maven.compiler.release>11</maven.compiler.release>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
     <clickhouse.version>0.9.8</clickhouse.version>
     <duckdb.version>1.4.5.0</duckdb.version>
   </properties>
@@ -29,7 +30,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.15.0</version>
         <configuration>
-          <release>${maven.compiler.release}</release>
+          <source>21</source>
+          <target>21</target>
         </configuration>
         <executions>
           <execution>
