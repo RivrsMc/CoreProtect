@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+import it.unimi.dsi.fastutil.Pair;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
@@ -29,15 +30,16 @@ import net.coreprotect.utility.WorldUtils;
 import net.coreprotect.utility.ErrorReporter;
 import net.coreprotect.utility.DatabaseUtils;
 import net.coreprotect.utility.EntitySpawnTracking;
+import org.bukkit.inventory.ItemStack;
 
 public class ChestTransactionLookup {
 
-    public static List<String> performLookup(String command, Statement statement, Location l, CommandSender commandSender, int page, int limit, boolean exact) {
+    public static LookupResult performLookup(String command, Statement statement, Location l, CommandSender commandSender, int page, int limit, boolean exact) {
         return performLookup(command, statement, l, commandSender, page, limit, exact, null);
     }
 
-    public static List<String> performLookup(String command, Statement statement, Location l, CommandSender commandSender, int page, int limit, boolean exact, Integer entitySpawnRowId) {
-        List<String> result = new ArrayList<>();
+    public static LookupResult performLookup(String command, Statement statement, Location l, CommandSender commandSender, int page, int limit, boolean exact, Integer entitySpawnRowId) {
+        LookupResult result = new LookupResult(new ArrayList<>());
         if (entitySpawnRowId == null) {
             ConfigHandler.lookupEntityContainer.remove(commandSender.getName());
         }
@@ -160,6 +162,8 @@ public class ChestTransactionLookup {
                 int resultZ = results.getInt("z");
                 byte[] resultMetadata = DatabaseUtils.getBytes(results, "metadata");
                 String tooltip = ItemUtils.getEnchantments(resultMetadata, resultType, resultAmount);
+                ItemStack item = new ItemStack(MaterialUtils.getType(resultType), resultAmount);
+                item = (ItemStack) net.coreprotect.database.rollback.Rollback.populateItemStack(item, resultMetadata)[2];
 
                 String resultUser = UserStatement.getName(statement.getConnection(), resultUserId);
                 String timeAgo = ChatUtils.getTimeSince(resultTime, time, true);
@@ -190,7 +194,7 @@ public class ChestTransactionLookup {
                 if (entitySpawnRowId != null && (displayWorldId != resultWorldId || displayX != resultX || displayY != resultY || displayZ != resultZ)) {
                     coordinateInfo = ChatUtils.getCoordinateTooltip(resultWorldId, resultX, resultY, resultZ, Phrase.build(Phrase.LOOKUP_ENTITY_ORIGIN), true);
                 }
-                result.add(timeAgo + " " + tag + " " + Phrase.build(Phrase.LOOKUP_CONTAINER, Color.DARK_AQUA + rbFormat + resultUser + Color.WHITE + rbFormat, "x" + resultAmount, ChatUtils.createTooltip(Color.DARK_AQUA + rbFormat + target, tooltip) + coordinateInfo + Color.WHITE, selector));
+                result.add(timeAgo + " " + tag + " " + Phrase.build(Phrase.LOOKUP_CONTAINER, Color.DARK_AQUA + rbFormat + resultUser + Color.WHITE + rbFormat, "x" + resultAmount, ChatUtils.createTooltip(Color.DARK_AQUA + rbFormat + target, tooltip) + coordinateInfo + Color.WHITE, selector), item);
                 PluginChannelListener.getInstance().sendData(commandSender, resultTime, Phrase.LOOKUP_CONTAINER, selector, resultUser, target, resultAmount, displayX, displayY, displayZ, displayWorldId, rbFormat, true, tag.contains("+"));
             }
             results.close();

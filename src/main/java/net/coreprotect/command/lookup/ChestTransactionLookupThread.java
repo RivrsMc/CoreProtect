@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.util.List;
 
+import net.coreprotect.database.lookup.LookupResult;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -38,10 +39,8 @@ public class ChestTransactionLookupThread implements Runnable {
             if (connection != null) {
                 Statement statement = connection.createStatement();
                 Integer entitySpawnRowId = ConfigHandler.lookupEntityContainer.get(player.getName());
-                List<String> blockData = ChestTransactionLookup.performLookup(command.getName(), statement, location, player, page, limit, false, entitySpawnRowId);
-                for (String data : blockData) {
-                    Chat.sendComponent(player, data);
-                }
+                LookupResult blockData = ChestTransactionLookup.performLookup(command.getName(), statement, location, player, page, limit, false, entitySpawnRowId);
+                blockData.send(player);
                 statement.close();
             }
             else {
