@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.util.List;
 
+import net.coreprotect.database.lookup.LookupResult;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -21,10 +22,11 @@ public class ContainerInspector extends BaseInspector {
 
                     try (Connection connection = getDatabaseConnection(player)) {
                         Statement statement = connection.createStatement();
-                        List<String> blockData = ChestTransactionLookup.performLookup(null, statement, finalLocation, player, 1, 7, false);
-                        for (String data : blockData) {
-                            Chat.sendComponent(player, data);
-                        }
+                        LookupResult blockData = ChestTransactionLookup.performLookup(null, statement, finalLocation, player, 1, 7, false);
+                        blockData.send(player);
+//                        for (String data : blockData) {
+//                            Chat.sendComponent(player, data);
+//                        }
 
                         statement.close();
                     }

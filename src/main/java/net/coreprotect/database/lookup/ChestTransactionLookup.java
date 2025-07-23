@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import it.unimi.dsi.fastutil.Pair;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -21,11 +22,12 @@ import net.coreprotect.utility.ItemUtils;
 import net.coreprotect.utility.MaterialUtils;
 import net.coreprotect.utility.StringUtils;
 import net.coreprotect.utility.WorldUtils;
+import org.bukkit.inventory.ItemStack;
 
 public class ChestTransactionLookup {
 
-    public static List<String> performLookup(String command, Statement statement, Location l, CommandSender commandSender, int page, int limit, boolean exact) {
-        List<String> result = new ArrayList<>();
+    public static LookupResult performLookup(String command, Statement statement, Location l, CommandSender commandSender, int page, int limit, boolean exact) {
+        LookupResult result = new LookupResult(new ArrayList<>());
 
         try {
             if (l == null) {
@@ -88,6 +90,8 @@ public class ChestTransactionLookup {
                 int resultRolledBack = results.getInt("rolled_back");
                 byte[] resultMetadata = results.getBytes("metadata");
                 String tooltip = ItemUtils.getEnchantments(resultMetadata, resultType, resultAmount);
+                ItemStack item = new ItemStack(MaterialUtils.getType(resultType), resultAmount);
+                item = (ItemStack) net.coreprotect.database.rollback.Rollback.populateItemStack(item, resultMetadata)[2];
 
                 if (ConfigHandler.playerIdCacheReversed.get(resultUserId) == null) {
                     UserStatement.loadName(statement.getConnection(), resultUserId);
@@ -97,7 +101,8 @@ public class ChestTransactionLookup {
                 String timeAgo = ChatUtils.getTimeSince(resultTime, time, true);
 
                 if (!found) {
-                    result.add(new StringBuilder(Color.WHITE + "----- " + Color.DARK_AQUA + Phrase.build(Phrase.CONTAINER_HEADER) + Color.WHITE + " ----- " + ChatUtils.getCoordinates(command, worldId, x, y, z, false, false)).toString());
+                    result.add(new StringBuilder(Color.WHITE + "----- " + Color.DARK_AQUA + Phrase.build(Phrase.CONTAINER_HEADER)
+                            + Color.WHITE + " ----- " + ChatUtils.getCoordinates(command, worldId, x, y, z, false, false)).toString());
                 }
                 found = true;
 
@@ -118,7 +123,9 @@ public class ChestTransactionLookup {
                     target = target.split(":")[1];
                 }
 
-                result.add(new StringBuilder(timeAgo + " " + tag + " " + Phrase.build(Phrase.LOOKUP_CONTAINER, Color.DARK_AQUA + rbFormat + resultUser + Color.WHITE + rbFormat, "x" + resultAmount, ChatUtils.createTooltip(Color.DARK_AQUA + rbFormat + target, tooltip) + Color.WHITE, selector)).toString());
+                result.add(new StringBuilder(timeAgo + " " + tag + " " + Phrase.build(Phrase.LOOKUP_CONTAINER,
+                        Color.DARK_AQUA + rbFormat + resultUser + Color.WHITE + rbFormat, "x" + resultAmount,
+                        ChatUtils.createTooltip(Color.DARK_AQUA + rbFormat + target) + Color.WHITE, selector)).toString(), item);
                 PluginChannelListener.getInstance().sendData(commandSender, resultTime, Phrase.LOOKUP_CONTAINER, selector, resultUser, target, resultAmount, x, y, z, worldId, rbFormat, true, tag.contains("+"));
             }
             results.close();

@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.HoverEventSource;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Villager;
@@ -21,6 +25,8 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class SpigotHandler extends SpigotAdapter implements SpigotInterface {
 
@@ -75,12 +81,10 @@ public class SpigotHandler extends SpigotAdapter implements SpigotInterface {
                 BaseComponent[] displayComponent = TextComponent.fromLegacyText(processComponent(tooltipText));
                 component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(displayComponent)));
                 ((TextComponent) message).addExtra(component);
-            }
-            else {
+            } else {
                 super.addHoverComponent(message, data);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -115,12 +119,10 @@ public class SpigotHandler extends SpigotAdapter implements SpigotInterface {
                     component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, data[1]));
                     SpigotAdapter.ADAPTER.setHoverEvent(component, StringUtils.hoverCommandFilter(data[1]));
                     message.addExtra(component);
-                }
-                else if (data[0].equals(Chat.COMPONENT_POPUP)) {
+                } else if (data[0].equals(Chat.COMPONENT_POPUP)) {
                     SpigotAdapter.ADAPTER.addHoverComponent(message, data);
                 }
-            }
-            else {
+            } else {
                 builder.append(matcher.group(2));
             }
         }
@@ -179,6 +181,62 @@ public class SpigotHandler extends SpigotAdapter implements SpigotInterface {
         }
     }
 
+    @Override
+    public void sendComponent(CommandSender sender, String string, String bypass, Object... args) {
+        net.kyori.adventure.text.TextComponent.Builder message = Component.text();
+        StringBuilder builder = new StringBuilder();
+
+        if (sender instanceof ConsoleCommandSender) {
+            string = string.replace(SpigotHandler.DARK_AQUA.toString(), ChatColor.DARK_AQUA.toString());
+        }
+
+        Matcher matcher = Util.tagParser.matcher(string);
+        int argIndex = 0;
+        while (matcher.find()) {
+            String value = matcher.group(1);
+            if (value != null) {
+                if (builder.length() > 0) {
+                    addBuilder(message, builder);
+                }
+
+                String[] data = value.split("\\|", 3);
+                if (data[0].equals(Chat.COMPONENT_COMMAND)) {
+                    Component component = LegacyComponentSerializer.legacySection().deserialize(data[2])
+                            .clickEvent(net.kyori.adventure.text.event.ClickEvent.clickEvent(net.kyori.adventure.text.event.ClickEvent.Action.RUN_COMMAND,
+                                    data[1]))
+                            .hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(LegacyComponentSerializer
+                                    .legacySection().deserialize(StringUtils.hoverCommandFilter(data[1]))));
+                    message.append(component);
+                } else if (data[0].equals(Chat.COMPONENT_POPUP)) {
+                    Component component = LegacyComponentSerializer.legacySection().deserialize(data[2])
+                            .hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(LegacyComponentSerializer
+                                    .legacySection().deserialize(StringUtils.hoverCommandFilter(data[1]))));
+                    message.append(component);
+                } else if (data[0].equals(Chat.COMPONENT_ITEM)) {
+                    if (!(args[argIndex] instanceof ItemStack)){
+                        message.append(Component.text("INVALID_ITEM_PASSED"));
+                        continue;
+                    }
+
+                    ItemStack item = (ItemStack) args[argIndex++];
+                    message.append(item.displayName());
+                }
+            } else {
+                builder.append(matcher.group(2));
+            }
+        }
+
+        if (builder.length() > 0) {
+            addBuilder(message, builder);
+        }
+
+        if (bypass != null) {
+            message.append(Component.text(bypass));
+        }
+
+        sender.sendMessage(message);
+    }
+
     private static void addBuilder(TextComponent message, StringBuilder builder) {
         String[] splitBuilder = builder.toString().split(SpigotHandler.DARK_AQUA.toString());
         for (int i = 0; i < splitBuilder.length; i++) {
@@ -186,8 +244,7 @@ public class SpigotHandler extends SpigotAdapter implements SpigotInterface {
                 TextComponent textComponent = new TextComponent(splitBuilder[i]);
                 textComponent.setColor(SpigotHandler.DARK_AQUA);
                 message.addExtra(textComponent);
-            }
-            else {
+            } else {
                 message.addExtra(splitBuilder[i]);
             }
         }
@@ -213,5 +270,21 @@ public class SpigotHandler extends SpigotAdapter implements SpigotInterface {
             return null;
         }
     }
+
+    private static void addBuilder(net.kyori.adventure.text.TextComponent.Builder message, StringBuilder builder) {
+        String[] splitBuilder = builder.toString().split(SpigotHandler.DARK_AQUA.toString());
+        for (int i = 0; i < splitBuilder.length; i++) {
+            if (i > 0) {
+                Component textComponent = Component.text(splitBuilder[i])
+                        .color(TextColor.fromHexString("#31b0e8"));
+                message.append(textComponent);
+            } else {
+                message.append(Component.text(splitBuilder[i]));
+            }
+        }
+
+        builder.setLength(0);
+    }
+
 
 }
