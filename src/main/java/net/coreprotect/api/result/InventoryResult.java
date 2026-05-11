@@ -2,6 +2,7 @@ package net.coreprotect.api.result;
 
 import org.bukkit.Material;
 
+import net.coreprotect.model.item.ItemTransactionActions;
 import net.coreprotect.utility.ItemUtils;
 import net.coreprotect.utility.MaterialUtils;
 
@@ -38,7 +39,7 @@ public class InventoryResult implements CoreProtectResult {
         this.transactionActionId = transactionActionId;
         this.rolledBack = rolledBack;
         this.sourceId = sourceId;
-        this.actionId = normalizeInventoryAction(transactionActionId);
+        this.actionId = ItemTransactionActions.getInventoryActionId(transactionActionId);
     }
 
     public int getActionId() {
@@ -46,14 +47,7 @@ public class InventoryResult implements CoreProtectResult {
     }
 
     public String getActionString() {
-        switch (actionId) {
-            case 0:
-                return "remove";
-            case 1:
-                return "add";
-            default:
-                return "unknown";
-        }
+        return ItemTransactionActions.getActionString(actionId);
     }
 
     public int getAmount() {
@@ -99,36 +93,7 @@ public class InventoryResult implements CoreProtectResult {
     }
 
     public String getTransactionActionString() {
-        switch (transactionActionId) {
-            case 0:
-                return "remove";
-            case 1:
-                return "add";
-            case 2:
-                return "drop";
-            case 3:
-                return "pickup";
-            case 4:
-                return "withdraw";
-            case 5:
-                return "deposit";
-            case 6:
-                return "throw";
-            case 7:
-                return "shoot";
-            case 8:
-                return "break";
-            case 9:
-                return "destroy";
-            case 10:
-                return "create";
-            case 11:
-                return "sell";
-            case 12:
-                return "buy";
-            default:
-                return "unknown";
-        }
+        return ItemTransactionActions.getActionString(transactionActionId);
     }
 
     public Material getType() {
@@ -160,16 +125,4 @@ public class InventoryResult implements CoreProtectResult {
         return world;
     }
 
-    private static int normalizeInventoryAction(int transactionActionId) {
-        switch (transactionActionId) {
-            case 0:
-            case 3:
-            case 4:
-            case 10:
-            case 12:
-                return 1;
-            default:
-                return 0;
-        }
-    }
 }

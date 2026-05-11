@@ -2,6 +2,7 @@ package net.coreprotect.api.result;
 
 import org.bukkit.Material;
 
+import net.coreprotect.model.item.ItemTransactionActions;
 import net.coreprotect.utility.MaterialUtils;
 
 /**
@@ -39,36 +40,7 @@ public class ItemResult implements CoreProtectResult {
     }
 
     public String getActionString() {
-        switch (actionId) {
-            case 0:
-                return "remove";
-            case 1:
-                return "add";
-            case 2:
-                return "drop";
-            case 3:
-                return "pickup";
-            case 4:
-                return "withdraw";
-            case 5:
-                return "deposit";
-            case 6:
-                return "throw";
-            case 7:
-                return "shoot";
-            case 8:
-                return "break";
-            case 9:
-                return "destroy";
-            case 10:
-                return "create";
-            case 11:
-                return "sell";
-            case 12:
-                return "buy";
-            default:
-                return "unknown";
-        }
+        return ItemTransactionActions.getActionString(actionId);
     }
 
     public int getAmount() {
