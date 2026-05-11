@@ -32,10 +32,6 @@ public class SignAPI {
         return performLookup(LookupOptions.builder().time(offset).location(location).build());
     }
 
-    public static List<SignResult> performLookup(String user, int offset) {
-        return performLookup(LookupOptions.builder().user(user).time(offset).build());
-    }
-
     public static List<SignResult> performLookup(LookupOptions options) {
         List<SignResult> result = new ArrayList<>();
 

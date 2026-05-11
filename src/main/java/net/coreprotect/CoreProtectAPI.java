@@ -18,6 +18,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import net.coreprotect.api.BlockAPI;
+import net.coreprotect.api.ItemAPI;
 import net.coreprotect.api.LookupOptions;
 import net.coreprotect.api.MessageAPI;
 import net.coreprotect.api.QueueLookup;
@@ -26,6 +27,7 @@ import net.coreprotect.api.SignAPI;
 import net.coreprotect.api.UsernameAPI;
 import net.coreprotect.api.result.BlockResult;
 import net.coreprotect.api.result.ContainerResult;
+import net.coreprotect.api.result.ItemResult;
 import net.coreprotect.api.result.MessageResult;
 import net.coreprotect.api.result.SignResult;
 import net.coreprotect.api.result.SessionResult;
@@ -174,6 +176,20 @@ public class CoreProtectAPI extends Queue {
     }
 
     /**
+     * Performs a typed lookup on world item transactions.
+     *
+     * @param options
+     *            Lookup options
+     * @return List of results or null if API is disabled
+     */
+    public List<ItemResult> itemLookup(LookupOptions options) {
+        if (isEnabled()) {
+            return ItemAPI.performLookup(options);
+        }
+        return null;
+    }
+
+    /**
      * Performs a lookup on session data for the specified user.
      * 
      * @param user
@@ -316,22 +332,6 @@ public class CoreProtectAPI extends Queue {
     public List<SignResult> signLookup(LookupOptions options) {
         if (isEnabled()) {
             return SignAPI.performLookup(options);
-        }
-        return null;
-    }
-
-    /**
-     * Performs a sign text lookup for the specified user.
-     *
-     * @param user
-     *            The user to look up, or #global/null for all users
-     * @param time
-     *            Time constraint in seconds
-     * @return List of results or null if API is disabled
-     */
-    public List<SignResult> signLookup(String user, int time) {
-        if (isEnabled()) {
-            return SignAPI.performLookup(user, time);
         }
         return null;
     }
