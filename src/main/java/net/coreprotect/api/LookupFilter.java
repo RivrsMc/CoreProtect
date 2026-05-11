@@ -75,7 +75,10 @@ final class LookupFilter {
     }
 
     int bind(PreparedStatement statement) throws Exception {
-        int parameterIndex = 1;
+        return bind(statement, 1);
+    }
+
+    int bind(PreparedStatement statement, int parameterIndex) throws Exception {
         statement.setInt(parameterIndex++, checkTime);
 
         if (userId != null) {

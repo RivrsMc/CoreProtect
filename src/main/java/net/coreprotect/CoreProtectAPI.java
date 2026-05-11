@@ -18,6 +18,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import net.coreprotect.api.BlockAPI;
+import net.coreprotect.api.InventoryAPI;
 import net.coreprotect.api.ItemAPI;
 import net.coreprotect.api.LookupOptions;
 import net.coreprotect.api.MessageAPI;
@@ -27,6 +28,7 @@ import net.coreprotect.api.SignAPI;
 import net.coreprotect.api.UsernameAPI;
 import net.coreprotect.api.result.BlockResult;
 import net.coreprotect.api.result.ContainerResult;
+import net.coreprotect.api.result.InventoryResult;
 import net.coreprotect.api.result.ItemResult;
 import net.coreprotect.api.result.MessageResult;
 import net.coreprotect.api.result.SignResult;
@@ -185,6 +187,20 @@ public class CoreProtectAPI extends Queue {
     public List<ItemResult> itemLookup(LookupOptions options) {
         if (isEnabled()) {
             return ItemAPI.performLookup(options);
+        }
+        return null;
+    }
+
+    /**
+     * Performs a typed lookup on player inventory transactions.
+     *
+     * @param options
+     *            Lookup options
+     * @return List of results or null if API is disabled
+     */
+    public List<InventoryResult> inventoryLookup(LookupOptions options) {
+        if (isEnabled()) {
+            return InventoryAPI.performLookup(options);
         }
         return null;
     }
