@@ -5,10 +5,12 @@ import java.util.Locale;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.EntityType;
 
 import net.coreprotect.model.action.LookupActions;
 import net.coreprotect.utility.BlockUtils;
 import net.coreprotect.utility.BlockTypeUtils;
+import net.coreprotect.utility.EntityUtils;
 import net.coreprotect.utility.MaterialUtils;
 import net.coreprotect.utility.StringUtils;
 
@@ -64,6 +66,10 @@ public class BlockResult implements CoreProtectResult {
     }
 
     public Material getType() {
+        if (actionId == LookupActions.ENTITY_KILL) {
+            return null;
+        }
+
         Material material = MaterialUtils.getType(type);
         if (material == null) {
             return null;
@@ -73,7 +79,23 @@ public class BlockResult implements CoreProtectResult {
         return MaterialUtils.getType(StringUtils.nameFilter(typeName, data));
     }
 
+    public EntityType getEntityType() {
+        if (actionId != LookupActions.ENTITY_KILL) {
+            return null;
+        }
+
+        if (type == 0) {
+            return EntityType.PLAYER;
+        }
+
+        return EntityUtils.getEntityType(type);
+    }
+
     public BlockData getBlockData() {
+        if (actionId == LookupActions.ENTITY_KILL) {
+            return null;
+        }
+
         if (blockData == null || blockData.isEmpty()) {
             Material material = getType();
             if (material != null) {
