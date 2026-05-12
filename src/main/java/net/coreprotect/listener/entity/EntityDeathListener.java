@@ -74,6 +74,8 @@ import net.coreprotect.CoreProtect;
 import net.coreprotect.bukkit.BukkitAdapter;
 import net.coreprotect.config.Config;
 import net.coreprotect.consumer.Queue;
+import net.coreprotect.paper.PaperAdapter;
+import net.coreprotect.spigot.SpigotAdapter;
 import net.coreprotect.thread.CacheHandler;
 import net.coreprotect.thread.Scheduler;
 import net.coreprotect.utility.serialize.ItemMetaHandler;
@@ -424,6 +426,8 @@ public final class EntityDeathListener extends Queue implements Listener {
                     recipe.add(ingredients);
                     recipe.add(merchantRecipe.getVillagerExperience());
                     recipe.add(merchantRecipe.getPriceMultiplier());
+                    BukkitAdapter.ADAPTER.addMerchantRecipeMeta(merchantRecipe, recipe);
+                    PaperAdapter.ADAPTER.addMerchantRecipeMeta(merchantRecipe, recipe);
                     recipes.add(recipe);
                 }
 
@@ -435,6 +439,9 @@ public final class EntityDeathListener extends Queue implements Listener {
                     info.add(villager.getVillagerLevel());
                     info.add(villager.getVillagerExperience());
                     info.add(serializeVillagerMemories(villager));
+                    info.add(PaperAdapter.ADAPTER.getVillagerReputations(villager));
+                    info.add(PaperAdapter.ADAPTER.getVillagerRestocksToday(villager));
+                    info.add(SpigotAdapter.ADAPTER.getVillagerGossipDecayTime(villager));
                 }
                 else {
                     info.add(null);

@@ -296,6 +296,10 @@ public interface BukkitInterface {
      */
     boolean setEntityMeta(Entity entity, Object value, int count);
 
+    void addMerchantRecipeMeta(MerchantRecipe recipe, List<Object> recipeData);
+
+    void setMerchantRecipeMeta(MerchantRecipe recipe, List<?> recipeData);
+
     /**
      * Gets the wolf variant and adds it to the info list.
      * Only implemented in Minecraft 1.21+.

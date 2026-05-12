@@ -119,6 +119,14 @@ public class BukkitAdapter implements BukkitInterface {
     }
 
     @Override
+    public void addMerchantRecipeMeta(MerchantRecipe recipe, List<Object> recipeData) {
+    }
+
+    @Override
+    public void setMerchantRecipeMeta(MerchantRecipe recipe, List<?> recipeData) {
+    }
+
+    @Override
     public void getWolfVariant(org.bukkit.entity.Wolf wolf, List<Object> info) {
         // Base implementation does nothing - Wolf variants only exist in 1.21+
     }
