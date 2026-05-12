@@ -25,6 +25,7 @@ import net.coreprotect.consumer.Queue;
 import net.coreprotect.consumer.process.Process;
 import net.coreprotect.language.Phrase;
 import net.coreprotect.model.BlockGroup;
+import net.coreprotect.model.rollback.RollbackUpdateTargets;
 import net.coreprotect.utility.Chat;
 import net.coreprotect.utility.Color;
 import net.coreprotect.utility.ItemUtils;
@@ -223,11 +224,11 @@ public class Database extends Queue {
 
     public static void performUpdate(Statement statement, long id, int rb, int table) {
         try {
-            int rolledBack = MaterialUtils.toggleRolledBack(rb, (table == 2 || table == 3 || table == 4)); // co_item, co_container, co_block
-            if (table == 1 || table == 3) {
+            int rolledBack = MaterialUtils.toggleRolledBack(rb, RollbackUpdateTargets.usesInventoryRollbackState(table));
+            if (RollbackUpdateTargets.updatesContainerTable(table)) {
                 statement.executeUpdate("UPDATE " + ConfigHandler.prefix + "container SET rolled_back='" + rolledBack + "' WHERE rowid='" + id + "'");
             }
-            else if (table == 2) {
+            else if (RollbackUpdateTargets.updatesItemTable(table)) {
                 statement.executeUpdate("UPDATE " + ConfigHandler.prefix + "item SET rolled_back='" + rolledBack + "' WHERE rowid='" + id + "'");
             }
             else {

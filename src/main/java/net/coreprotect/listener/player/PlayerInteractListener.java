@@ -54,6 +54,7 @@ import net.coreprotect.listener.player.inspector.ContainerInspector;
 import net.coreprotect.listener.player.inspector.InteractionInspector;
 import net.coreprotect.listener.player.inspector.SignInspector;
 import net.coreprotect.model.BlockGroup;
+import net.coreprotect.model.action.SignActions;
 import net.coreprotect.paper.PaperAdapter;
 import net.coreprotect.thread.CacheHandler;
 import net.coreprotect.thread.Scheduler;
@@ -354,9 +355,9 @@ public final class PlayerInteractListener extends Queue implements Listener {
                                         boolean modifyingFront = oldBackGlowing == newBackGlowing && oldColorSecondary == newColorSecondary;
                                         if (oldColor != newColor || oldColorSecondary != newColorSecondary || oldFrontGlowing != newFrontGlowing || oldBackGlowing != newBackGlowing || oldIsWaxed != newIsWaxed) {
                                             Location location = blockState.getLocation();
-                                            Queue.queueSignText(player.getName(), location, 0, oldColor, oldColorSecondary, oldFrontGlowing, oldBackGlowing, oldIsWaxed, modifyingFront, line1, line2, line3, line4, line5, line6, line7, line8, 1); // 1 second timeOffset
+                                            Queue.queueSignText(player.getName(), location, SignActions.BREAK, oldColor, oldColorSecondary, oldFrontGlowing, oldBackGlowing, oldIsWaxed, modifyingFront, line1, line2, line3, line4, line5, line6, line7, line8, 1); // 1 second timeOffset
                                             Queue.queueBlockPlace(player.getName(), blockState, block.getType(), blockState, block.getType(), -1, 0, blockState.getBlockData().getAsString());
-                                            Queue.queueSignText(player.getName(), location, 2, newColor, newColorSecondary, newFrontGlowing, newBackGlowing, newIsWaxed, modifyingFront, line1, line2, line3, line4, line5, line6, line7, line8, 0);
+                                            Queue.queueSignText(player.getName(), location, SignActions.EDIT, newColor, newColorSecondary, newFrontGlowing, newBackGlowing, newIsWaxed, modifyingFront, line1, line2, line3, line4, line5, line6, line7, line8, 0);
                                         }
 
                                     }

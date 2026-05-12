@@ -26,6 +26,7 @@ import net.coreprotect.bukkit.BukkitAdapter;
 import net.coreprotect.config.Config;
 import net.coreprotect.consumer.Queue;
 import net.coreprotect.model.BlockGroup;
+import net.coreprotect.model.action.SignActions;
 import net.coreprotect.paper.PaperAdapter;
 import net.coreprotect.thread.CacheHandler;
 import net.coreprotect.utility.BlockUtils;
@@ -126,7 +127,7 @@ public final class BlockPlaceListener extends Queue implements Listener {
                             boolean isWaxed = BukkitAdapter.ADAPTER.isWaxed(sign);
 
                             if (line1.length() > 0 || line2.length() > 0 || line3.length() > 0 || line4.length() > 0 || line5.length() > 0 || line6.length() > 0 || line7.length() > 0 || line8.length() > 0) {
-                                Queue.queueSignText(player.getName(), location, 1, color, colorSecondary, frontGlowing, backGlowing, isWaxed, isFront, line1, line2, line3, line4, line5, line6, line7, line8, 0);
+                                Queue.queueSignText(player.getName(), location, SignActions.PLACE, color, colorSecondary, frontGlowing, backGlowing, isWaxed, isFront, line1, line2, line3, line4, line5, line6, line7, line8, 0);
                             }
                         }
                         catch (Exception e) {

@@ -7,6 +7,8 @@ import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 
 import net.coreprotect.api.SessionLookup;
+import net.coreprotect.model.action.LookupActions;
+import net.coreprotect.model.action.SessionActions;
 import net.coreprotect.utility.BlockUtils;
 import net.coreprotect.utility.BlockTypeUtils;
 import net.coreprotect.utility.EntityUtils;
@@ -28,31 +30,10 @@ public class ParseResult implements CoreProtectResult {
     public String getActionString() {
         int actionID = Integer.parseInt(parse[7]);
         if (parse.length < 13 && Integer.parseInt(parse[6]) == SessionLookup.ID) {
-            switch (actionID) {
-                case 0:
-                    return "logout";
-                case 1:
-                    return "login";
-                default:
-                    return "unknown";
-            }
+            return SessionActions.getActionString(actionID);
         }
 
-        String result = "unknown";
-        if (actionID == 0) {
-            result = "break";
-        }
-        else if (actionID == 1) {
-            result = "place";
-        }
-        else if (actionID == 2) {
-            result = "click";
-        }
-        else if (actionID == 3) {
-            result = "kill";
-        }
-
-        return result;
+        return LookupActions.getActionString(actionID);
     }
 
     @Deprecated

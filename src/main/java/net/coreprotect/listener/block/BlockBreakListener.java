@@ -35,6 +35,7 @@ import net.coreprotect.config.Config;
 import net.coreprotect.consumer.Queue;
 import net.coreprotect.database.Database;
 import net.coreprotect.model.BlockGroup;
+import net.coreprotect.model.action.SignActions;
 import net.coreprotect.paper.PaperAdapter;
 import net.coreprotect.thread.CacheHandler;
 import net.coreprotect.utility.BlockUtils;
@@ -273,7 +274,7 @@ public final class BlockBreakListener extends Queue implements Listener {
                         boolean backGlowing = BukkitAdapter.ADAPTER.isGlowing(sign, !isFront);
                         boolean isWaxed = BukkitAdapter.ADAPTER.isWaxed(sign);
 
-                        Queue.queueSignText(user, location, 0, color, colorSecondary, frontGlowing, backGlowing, isWaxed, isFront, line1, line2, line3, line4, line5, line6, line7, line8, 5);
+                        Queue.queueSignText(user, location, SignActions.BREAK, color, colorSecondary, frontGlowing, backGlowing, isWaxed, isFront, line1, line2, line3, line4, line5, line6, line7, line8, 5);
                     }
                     catch (Exception e) {
                         e.printStackTrace();

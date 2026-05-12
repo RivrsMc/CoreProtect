@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 
+import net.coreprotect.model.action.LookupActions;
 import net.coreprotect.utility.BlockUtils;
 import net.coreprotect.utility.BlockTypeUtils;
 import net.coreprotect.utility.MaterialUtils;
@@ -46,18 +47,7 @@ public class BlockResult implements CoreProtectResult {
     }
 
     public String getActionString() {
-        switch (actionId) {
-            case 0:
-                return "break";
-            case 1:
-                return "place";
-            case 2:
-                return "click";
-            case 3:
-                return "kill";
-            default:
-                return "unknown";
-        }
+        return LookupActions.getActionString(actionId);
     }
 
     @Deprecated

@@ -2,6 +2,7 @@ package net.coreprotect.api.result;
 
 import org.bukkit.Material;
 
+import net.coreprotect.model.item.InventorySources;
 import net.coreprotect.model.item.ItemTransactionActions;
 import net.coreprotect.utility.ItemUtils;
 import net.coreprotect.utility.MaterialUtils;
@@ -72,16 +73,7 @@ public class InventoryResult implements CoreProtectResult {
     }
 
     public String getSource() {
-        switch (sourceId) {
-            case 0:
-                return "block";
-            case 1:
-                return "container";
-            case 2:
-                return "item";
-            default:
-                return "unknown";
-        }
+        return InventorySources.getSourceString(sourceId);
     }
 
     public long getTimestamp() {
@@ -98,7 +90,7 @@ public class InventoryResult implements CoreProtectResult {
 
     public Material getType() {
         Material material = MaterialUtils.getType(type);
-        if (sourceId == 0) {
+        if (sourceId == InventorySources.BLOCK) {
             return ItemUtils.itemFilter(material, true);
         }
 

@@ -30,9 +30,8 @@ import net.coreprotect.CoreProtect;
 import net.coreprotect.bukkit.BukkitAdapter;
 import net.coreprotect.config.Config;
 import net.coreprotect.config.ConfigHandler;
-import net.coreprotect.database.logger.ItemLogger;
-import net.coreprotect.model.item.ItemTransactionActions;
 import net.coreprotect.model.BlockGroup;
+import net.coreprotect.model.item.ItemTransactionActions;
 import net.coreprotect.thread.Scheduler;
 import net.coreprotect.utility.BlockUtils;
 import net.coreprotect.utility.BlockTypeUtils;
@@ -319,7 +318,7 @@ public class RollbackProcessor {
                         int action = rollbackType == 0 ? (inventoryAction ^ 1) : inventoryAction;
                         ItemStack itemstack = new ItemStack(inventoryItem, rowAmount);
                         Object[] populatedStack = RollbackItemHandler.populateItemStack(itemstack, rowMetadata);
-                        if (rowAction == ItemLogger.ITEM_REMOVE_ENDER || rowAction == ItemLogger.ITEM_ADD_ENDER) {
+                        if (rowAction == ItemTransactionActions.REMOVE_ENDER || rowAction == ItemTransactionActions.ADD_ENDER) {
                             RollbackUtil.modifyContainerItems(containerType, player.getEnderChest(), (Integer) populatedStack[0], ((ItemStack) populatedStack[2]).clone(), action ^ 1);
                         }
                         int modifiedArmor = RollbackUtil.modifyContainerItems(containerType, player.getInventory(), (Integer) populatedStack[0], (ItemStack) populatedStack[2], action);
