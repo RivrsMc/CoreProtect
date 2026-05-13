@@ -139,8 +139,8 @@ public class PaperHandler extends PaperAdapter {
 
     @Override
     public void setMerchantRecipeMeta(MerchantRecipe recipe, List<?> recipeData) {
-        if (recipeData.size() > 9) {
-            invokeBooleanSetter(recipe, "setIgnoreDiscounts", recipeData.get(9));
+        if (recipeData.size() > 8 && recipeData.get(8) instanceof Boolean) {
+            invokeBooleanSetter(recipe, "setIgnoreDiscounts", recipeData.get(8));
         }
         else if (recipeData.size() > 7 && recipeData.get(7) instanceof Boolean) {
             invokeBooleanSetter(recipe, "setIgnoreDiscounts", recipeData.get(7));

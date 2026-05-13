@@ -310,18 +310,13 @@ public class Bukkit_v1_20 extends Bukkit_v1_19 {
     @Override
     public void addMerchantRecipeMeta(MerchantRecipe recipe, List<Object> recipeData) {
         recipeData.add(recipe.getDemand());
-        recipeData.add(recipe.getSpecialPrice());
     }
 
     @Override
     public void setMerchantRecipeMeta(MerchantRecipe recipe, List<?> recipeData) {
-        if (recipeData.size() > 8) {
-            Object demand = recipeData.get(7);
-            Object specialPrice = recipeData.get(8);
-            if (demand instanceof Number && specialPrice instanceof Number) {
-                recipe.setDemand(((Number) demand).intValue());
-                recipe.setSpecialPrice(((Number) specialPrice).intValue());
-            }
+        if (recipeData.size() > 7 && recipeData.get(7) instanceof Number) {
+            recipe.setDemand(((Number) recipeData.get(7)).intValue());
         }
     }
+
 }
