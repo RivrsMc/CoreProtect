@@ -623,6 +623,9 @@ public class EntityUtil {
                     }
                     count++;
                 }
+                if (entity instanceof Villager) {
+                    BukkitAdapter.ADAPTER.refreshVillagerBrain((Villager) entity);
+                }
             }
             catch (Exception e) {
                 e.printStackTrace();

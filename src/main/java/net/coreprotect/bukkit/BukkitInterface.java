@@ -16,6 +16,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Painting;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.SignChangeEvent;
@@ -299,6 +300,8 @@ public interface BukkitInterface {
     void addMerchantRecipeMeta(MerchantRecipe recipe, List<Object> recipeData);
 
     void setMerchantRecipeMeta(MerchantRecipe recipe, List<?> recipeData);
+
+    void refreshVillagerBrain(Villager villager);
 
     /**
      * Gets the wolf variant and adds it to the info list.
