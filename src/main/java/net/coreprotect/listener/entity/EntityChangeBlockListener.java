@@ -111,7 +111,7 @@ public final class EntityChangeBlockListener extends Queue implements Listener {
         String user = "#gravity";
         if (originData != null) {
             String originKey = (String) originData[1];
-            String lookupUser = lookupCachedUser(originKey, fallingBlock.getBlockData().getMaterial());
+            String lookupUser = lookupCachedUser(originKey, newtype);
             if (lookupUser != null) {
                 user = lookupUser;
             }
