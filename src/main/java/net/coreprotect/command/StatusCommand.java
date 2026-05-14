@@ -84,6 +84,9 @@ public class StatusCommand {
                         Chat.sendMessage(player, Color.DARK_AQUA + Phrase.build(Phrase.STATUS_INTEGRATION, Color.WHITE, "WorldEdit", Selector.SECOND));
                     }
 
+                    long autoPurgeRowsPurged = ConfigHandler.autoPurgeRowsPurged.get();
+                    Chat.sendMessage(player, Color.DARK_AQUA + Phrase.build(Phrase.STATUS_AUTO_PURGE, Color.WHITE, String.format("%,d", autoPurgeRowsPurged), (autoPurgeRowsPurged == 1 ? Selector.FIRST : Selector.SECOND)));
+
                     try {
                         int consumerCount = 0;
                         int currentConsumerSize = Process.getCurrentConsumerSize();

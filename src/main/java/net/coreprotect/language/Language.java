@@ -213,6 +213,7 @@ public class Language {
         phrases.put(Phrase.ROLLBACK_TIME, "Time range: {0}.");
         phrases.put(Phrase.ROLLBACK_WORLD_ACTION, "Restricted to {world|action} \"{0}\".");
         phrases.put(Phrase.SIGN_HEADER, "Sign Messages");
+        phrases.put(Phrase.STATUS_AUTO_PURGE, "Cleanup: {0} {row|rows} auto purged since restart.");
         phrases.put(Phrase.STATUS_CONSUMER, "Consumer: {0} {item|items} in queue.");
         phrases.put(Phrase.STATUS_DATABASE, "Database: Using {0}.");
         phrases.put(Phrase.STATUS_INTEGRATION, "{0}: Integration {enabled|disabled}.");

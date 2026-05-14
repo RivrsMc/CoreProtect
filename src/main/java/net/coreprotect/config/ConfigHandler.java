@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -88,6 +89,7 @@ public class ConfigHandler extends Queue {
     public static volatile int blockdataId = 0;
     public static volatile int entityId = 0;
     public static volatile int artId = 0;
+    public static final AtomicLong autoPurgeRowsPurged = new AtomicLong(0);
 
     private static <K, V> Map<K, V> syncMap() {
         return Collections.synchronizedMap(new HashMap<>());
