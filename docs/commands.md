@@ -17,6 +17,7 @@ ___
 | [/co status](#co-status) | View the plugin status |
 | [/co consumer](#co-consumer) | Toggle consumer processing |
 | [/co migrate-db](#co-migrate-db) | Migrate between SQLite and MySQL |
+| [/co itemrenames](#co-itemrenames) | Lookup item rename history |
 
 ### Alias Commands
 
@@ -142,6 +143,22 @@ For complete migration instructions, safety guidelines, and troubleshooting info
 
 ___
 
+
+### /co itemrenames
+View a history of item renames (via anvil or third-party commands), including who renamed the item, its old name, and its new name.
+
+| Command | Parameters |
+| --- | --- |
+| /co itemrenames | `[user] [limit]` |
+| /co renames | *`/co itemrenames <params>`* |
+| /co ir | *`/co itemrenames <params>`* |
+
+* `user` *(optional)* — restrict results to a specific player.
+* `limit` *(optional)* — number of results to display (1-100, default 20).
+
+Example: `/co itemrenames Notch 50` shows the last 50 item renames performed by Notch.
+
+___
 
 ## Parameter Details
 
