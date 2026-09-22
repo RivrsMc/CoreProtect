@@ -79,10 +79,8 @@ public class ContainerInspector extends BaseInspector {
                         }
 
                         try (Statement statement = connection.createStatement()) {
-                            List<String> blockData = ChestTransactionLookup.performLookup(null, statement, location, player, 1, 7, false, entitySpawnRowId);
-                            for (String data : blockData) {
-                                Chat.sendComponent(player, data);
-                            }
+                            LookupResult blockData = ChestTransactionLookup.performLookup(null, statement, location, player, 1, 7, false, entitySpawnRowId);
+                            blockData.send(player);
                         }
                     }
                 }

@@ -205,7 +205,7 @@ public class SpigotHandler extends SpigotAdapter implements SpigotInterface {
                 if (data[0].equals(Chat.COMPONENT_COMMAND)) {
                     Component component = LegacyComponentSerializer.legacySection().deserialize(data[2])
                             .clickEvent(net.kyori.adventure.text.event.ClickEvent.clickEvent(net.kyori.adventure.text.event.ClickEvent.Action.RUN_COMMAND,
-                                    data[1]))
+                                    net.kyori.adventure.text.event.ClickEvent.Payload.string(data[1])))
                             .hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(LegacyComponentSerializer
                                     .legacySection().deserialize(StringUtils.hoverCommandFilter(data[1]))));
                     message.append(component);
