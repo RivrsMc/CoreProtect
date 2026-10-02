@@ -189,7 +189,7 @@ public class ChatUtils {
             return phrase;
         }
 
-        StringBuilder message = new StringBuilder(Chat.COMPONENT_TAG_OPEN + Chat.COMPONENT_POPUP);
+        StringBuilder message = new StringBuilder(Chat.COMPONENT_TAG_OPEN + Chat.COMPONENT_ITEM);
 
         // tooltip
         message.append("|" + tooltip.replace("|", Chat.COMPONENT_PIPE) + "|");
